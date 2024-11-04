@@ -1,19 +1,20 @@
 obj-m += sber_driver.o
 
 all:
-	@echo "Targets: clean, build, install, test"
+	@echo "Targets: clean, build, install, dmesg, test"
 
 build:
-	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+	make -C /lib/modules/$(shell uname -r)/build M=$(shell pwd) modules
 
 clean:
-	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+	make -C /lib/modules/$(shell uname -r)/build M=$(shell pwd) clean
 
 install: build
 	sudo insmod sber_driver.ko
 
-test: install
-	dmesg | tail
+dmesg: install
+	sudo dmesg | tail
+
 
 remove: clean
-	sudo rmmod lab2
+	sudo rmmod sber_driver

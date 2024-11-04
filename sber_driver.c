@@ -15,13 +15,11 @@
 #define SINGLE_OPEN_MODE 1
 #define MULTI_OPEN_MODE 2
 
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Oleg Shipulin");
-MODULE_DESCRIPTION("Queue-based Character Device Driver for Linux 6.x");
 
-static int major;
+static dev_t first;
 static int device_mode = DEFAULT_MODE;
 static struct class *queue_class;
+static struct cdev c_dev;
 static DEFINE_MUTEX(single_open_lock);
 
 // Представляет элемент очереди, содержащий однобайтовый data и указатели для реализации списка (struct list_head).
@@ -255,38 +253,38 @@ static const struct file_operations fops = {
  * @return 0 при успешной регистрации устройства или код ошибки.
  */
 static int __init queue_init(void) {
-    major = register_chrdev(0, DEVICE_NAME, &fops);
-    if (major < 0) {
+    if (alloc_chrdev_region(&first, 0, 1, DEVICE_NAME) < 0) {
         pr_err("sber_device: Failed to register device\n");
-        return major;
+        return -1;
     }
 
     queue_class = class_create(DEVICE_NAME);
     if (IS_ERR(queue_class)) {
-        unregister_chrdev(major, DEVICE_NAME);
+        unregister_chrdev_region(first, 1);
         pr_err("sber_device: Failed to create class\n");
         return PTR_ERR(queue_class);
     }
 
-    if (!device_create(queue_class, NULL, MKDEV(major, 0), NULL, DEVICE_NAME)) {
+    if (!device_create(queue_class, NULL, first, NULL, DEVICE_NAME)) {
         class_destroy(queue_class);
-        unregister_chrdev(major, DEVICE_NAME);
+        unregister_chrdev_region(first, 1);
         pr_err("sber_device: Failed to create device\n");
         return -ENOMEM;
+    }
+
+    cdev_init(&c_dev, &fops);
+    if (cdev_add(&c_dev, first, 1) == -1){
+          device_destroy(queue_class, first);
+          class_destroy(queue_class);
+          unregister_chrdev_region(first, 1);
     }
 
     INIT_LIST_HEAD(&default_queue.queue);
     init_rwsem(&default_queue.lock);
     default_queue.data_size = 0;
 
-    pr_info("sber_device: Registered with major number %d\n", major);
+    pr_info("sber_device: Registered with major number %d\n", MAJOR(first));
     return 0;
-
-error_device_create:
-    class_destroy(queue_class);
-error_class_create:
-    unregister_chrdev(major, DEVICE_NAME);
-    return -ENOMEM;
 }
 
 /**
@@ -296,11 +294,16 @@ error_class_create:
  * все ресурсы, занятые в процессе работы драйвера.
  */
 static void __exit queue_exit(void) {
-    device_destroy(queue_class, MKDEV(major, 0));
+    cdev_del(&c_dev);
+    device_destroy(queue_class, first);
     class_destroy(queue_class);
-    unregister_chrdev(major, DEVICE_NAME);
+    unregister_chrdev_region(first, 1);
     pr_info("sber_device: Unregistered\n");
 }
 
 module_init(queue_init);
 module_exit(queue_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Oleg Shipulin");
+MODULE_DESCRIPTION("Queue-based Character Device Driver for Linux 6.x");
