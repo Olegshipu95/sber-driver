@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sber Device Driver: Тестовое задание для Linux Kernel developer в Cбер</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Sber Device Driver
+   &#160;<span id="projectnumber">1</span>
+   </div>
+   <div id="projectbrief">Написание символьного драйвера</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="PageDoc"><div class="header">
+  <div class="headertitle">
+<div class="title">Тестовое задание для Linux Kernel developer в Cбер </div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><h2><a class="anchor" id="autotoc_md1"></a>
+Краткое описание - написать IO драйвер</h2>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Полное описание</h1>
+<p>Напишите драйвер символьного устройства, которое работает по принципу очереди: записываемые данные помещаются в конец очереди, а считываемые берутся из головы, и удаляются из очереди. Для организации очереди используйте структуру <b>struct list_head</b>. Сделайту глубину очереди 1000 байт.</p>
+<p>Драйвер должен иметь следующие режимы открытия:</p><ul>
+<li>*(по умолчанию)* не контролирует возможности параллельного использования;</li>
+<li>имеет возможность одиночного&#160; открытия устройства — параллельное открытие завершаться ошибкой, пока использующий устройство процесс (блокирующий) не завершит свою операцию и не закроет устройство;</li>
+<li>допускает много параллельных открытий&#160; - для каждой копии используются свои данные.</li>
+</ul>
+<p>Предполагаем, что драйвер предназначен для записи-чтения любых бинарных данных — проверьте работоспособность записью с контрольным считыванием самого файла полученного модуля *.ko*.</p>
+<p>Устройство должно быть совместимо с <em>linux API</em> и удовлетворять требованиям по поведению для char devices (сообщать о преполнении и иные необходимые сообщение). Каждая очередь должна состоять из 1000 элементов связанного списка. Каждый элемент содержит один байт. Режимы - по умолчанию (конкуренция на чтение и запись), одиночный, параллельный. При режиме по-умолчанию и одиночном, содержимое очереди сохраняется в памяти после закрытия всех дескрипторов всеми процессами, их получившими, при режиме параллельном, очереди, отдельно создаются для каждого дескриптора и удаляются при их закрытии. При вызове read с указанием количества байт, соответствующее количество элементов связанного списка очереди вычитывается, то же самое - при записи. При попытке записать больше 1000 байт, должна возвращаться ошибка переполнения, без фактической записи. У каждой копии свои данные - значит, что должны формироваться отдельные очереди для каждого нового подключения к устройству. Если три процесса записали по 1000 и вышли, то они писали каждый в свою очередь, и при выходе очереди были освобождены, а четвертый процесс получит свою очередь, но пустую. По умолчанию процессы конкурируют за доступ к одной очереди. К драйверу должны прилагаться тесты с описанием их работы. Можно написать самые простые тестовые консольные утилиты, где это оправданно. Где можно обойтись командами консоли, опишите соответствующие последовательности команд - нам нужно понять, как вы выполняли тесты. </p>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

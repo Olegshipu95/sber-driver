@@ -1,0 +1,774 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sber Device Driver: Файл sber_driver.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Sber Device Driver
+   &#160;<span id="projectnumber">1</span>
+   </div>
+   <div id="projectbrief">Написание символьного драйвера</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Структуры данных</a> &#124;
+<a href="#define-members">Макросы</a> &#124;
+<a href="#func-members">Функции</a> &#124;
+<a href="#var-members">Переменные</a>  </div>
+  <div class="headertitle">
+<div class="title">Файл sber_driver.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;linux/module.h&gt;</code><br />
+<code>#include &lt;linux/kernel.h&gt;</code><br />
+<code>#include &lt;linux/fs.h&gt;</code><br />
+<code>#include &lt;linux/slab.h&gt;</code><br />
+<code>#include &lt;linux/uaccess.h&gt;</code><br />
+<code>#include &lt;linux/cdev.h&gt;</code><br />
+<code>#include &lt;linux/mutex.h&gt;</code><br />
+<code>#include &lt;linux/rwsem.h&gt;</code><br />
+<code>#include &lt;linux/list.h&gt;</code><br />
+<code>#include &lt;linux/device.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Граф включаемых заголовочных файлов для sber_driver.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="sber__driver_8c__incl.png" border="0" usemap="#asber__driver_8c" alt=""/></div>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Структуры данных</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structqueue__element.html">queue_element</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structqueue__device.html">queue_device</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Макросы</h2></td></tr>
+<tr class="memitem:a5f5a2c9450ebc584b4fe743c6b1a280b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#a5f5a2c9450ebc584b4fe743c6b1a280b">DEVICE_NAME</a>&#160;&#160;&#160;&quot;sber_dev&quot;</td></tr>
+<tr class="separator:a5f5a2c9450ebc584b4fe743c6b1a280b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a142810068f1b99cd93d3fc9f0e160e02"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#a142810068f1b99cd93d3fc9f0e160e02">QUEUE_SIZE</a>&#160;&#160;&#160;1000</td></tr>
+<tr class="separator:a142810068f1b99cd93d3fc9f0e160e02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9c800875296f23bd616d7d273ff16d7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#ab9c800875296f23bd616d7d273ff16d7">DEFAULT_MODE</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:ab9c800875296f23bd616d7d273ff16d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afaf48714636ba1a4364aa256eb8dacb1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#afaf48714636ba1a4364aa256eb8dacb1">SINGLE_OPEN_MODE</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:afaf48714636ba1a4364aa256eb8dacb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e3549499a2441e9f2b1a83fdd935dc4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#a6e3549499a2441e9f2b1a83fdd935dc4">MULTI_OPEN_MODE</a>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:a6e3549499a2441e9f2b1a83fdd935dc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Функции</h2></td></tr>
+<tr class="memitem:ad94b36675e7eb067ea3ce6ff9e244a44"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#ad94b36675e7eb067ea3ce6ff9e244a44">MODULE_LICENSE</a> (&quot;GPL&quot;)</td></tr>
+<tr class="separator:ad94b36675e7eb067ea3ce6ff9e244a44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b31c4397995dbc5177041e18c602c85"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#a6b31c4397995dbc5177041e18c602c85">MODULE_AUTHOR</a> (&quot;Oleg Shipulin&quot;)</td></tr>
+<tr class="separator:a6b31c4397995dbc5177041e18c602c85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafdb6f1c89c44dd2a834feabb7a7a415"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#aafdb6f1c89c44dd2a834feabb7a7a415">MODULE_DESCRIPTION</a> (&quot;Queue-based Character Device Driver for Linux 6.x&quot;)</td></tr>
+<tr class="separator:aafdb6f1c89c44dd2a834feabb7a7a415"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8952af643c2b2ed549f097f3b915e71"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#ab8952af643c2b2ed549f097f3b915e71">DEFINE_MUTEX</a> (single_open_lock)</td></tr>
+<tr class="separator:ab8952af643c2b2ed549f097f3b915e71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae551618a4770b820ca8e41cc4b1cfa48"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#ae551618a4770b820ca8e41cc4b1cfa48">device_open</a> (struct inode *inode, struct file *file)</td></tr>
+<tr class="memdesc:ae551618a4770b820ca8e41cc4b1cfa48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Открывает устройство и инициализирует данные для очереди.  <a href="sber__driver_8c.html#ae551618a4770b820ca8e41cc4b1cfa48">Подробнее...</a><br /></td></tr>
+<tr class="separator:ae551618a4770b820ca8e41cc4b1cfa48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a840f5f5a1916e668ef83d6acd94f06eb"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#a840f5f5a1916e668ef83d6acd94f06eb">device_release</a> (struct inode *inode, struct file *file)</td></tr>
+<tr class="memdesc:a840f5f5a1916e668ef83d6acd94f06eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Освобождает ресурсы при закрытии устройства.  <a href="sber__driver_8c.html#a840f5f5a1916e668ef83d6acd94f06eb">Подробнее...</a><br /></td></tr>
+<tr class="separator:a840f5f5a1916e668ef83d6acd94f06eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bf4c715874774940b0daf0e04edb06c"><td class="memItemLeft" align="right" valign="top">static ssize_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#a7bf4c715874774940b0daf0e04edb06c">device_write</a> (struct file *file, const char __user *buf, size_t count, loff_t *offset)</td></tr>
+<tr class="memdesc:a7bf4c715874774940b0daf0e04edb06c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Записывает данные в очередь устройства.  <a href="sber__driver_8c.html#a7bf4c715874774940b0daf0e04edb06c">Подробнее...</a><br /></td></tr>
+<tr class="separator:a7bf4c715874774940b0daf0e04edb06c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b52b4f0dded88ffc383eb706cabd858"><td class="memItemLeft" align="right" valign="top">static ssize_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#a3b52b4f0dded88ffc383eb706cabd858">device_read</a> (struct file *file, char __user *buf, size_t count, loff_t *offset)</td></tr>
+<tr class="memdesc:a3b52b4f0dded88ffc383eb706cabd858"><td class="mdescLeft">&#160;</td><td class="mdescRight">Читает данные из очереди устройства.  <a href="sber__driver_8c.html#a3b52b4f0dded88ffc383eb706cabd858">Подробнее...</a><br /></td></tr>
+<tr class="separator:a3b52b4f0dded88ffc383eb706cabd858"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7469c0e02a3b12a90b9505401fbac6a1"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#a7469c0e02a3b12a90b9505401fbac6a1">device_ioctl</a> (struct file *file, unsigned int cmd, unsigned long arg)</td></tr>
+<tr class="memdesc:a7469c0e02a3b12a90b9505401fbac6a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Устанавливает режим работы устройства.  <a href="sber__driver_8c.html#a7469c0e02a3b12a90b9505401fbac6a1">Подробнее...</a><br /></td></tr>
+<tr class="separator:a7469c0e02a3b12a90b9505401fbac6a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4792b867d187659a1d56479af45e22b3"><td class="memItemLeft" align="right" valign="top">static int __init&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#a4792b867d187659a1d56479af45e22b3">queue_init</a> (void)</td></tr>
+<tr class="memdesc:a4792b867d187659a1d56479af45e22b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Инициализирует устройство, регистрирует его в ядре.  <a href="sber__driver_8c.html#a4792b867d187659a1d56479af45e22b3">Подробнее...</a><br /></td></tr>
+<tr class="separator:a4792b867d187659a1d56479af45e22b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accd366d0e2f138d4ec509b7f0f503e0b"><td class="memItemLeft" align="right" valign="top">static void __exit&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#accd366d0e2f138d4ec509b7f0f503e0b">queue_exit</a> (void)</td></tr>
+<tr class="memdesc:accd366d0e2f138d4ec509b7f0f503e0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Освобождает ресурсы и снимает регистрацию устройства.  <a href="sber__driver_8c.html#accd366d0e2f138d4ec509b7f0f503e0b">Подробнее...</a><br /></td></tr>
+<tr class="separator:accd366d0e2f138d4ec509b7f0f503e0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab306bba83f4bbc42ccf5c636967e0196"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#ab306bba83f4bbc42ccf5c636967e0196">module_init</a> (<a class="el" href="sber__driver_8c.html#a4792b867d187659a1d56479af45e22b3">queue_init</a>)</td></tr>
+<tr class="separator:ab306bba83f4bbc42ccf5c636967e0196"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af36044150beaeae89a1292423c2c9c02"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#af36044150beaeae89a1292423c2c9c02">module_exit</a> (<a class="el" href="sber__driver_8c.html#accd366d0e2f138d4ec509b7f0f503e0b">queue_exit</a>)</td></tr>
+<tr class="separator:af36044150beaeae89a1292423c2c9c02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Переменные</h2></td></tr>
+<tr class="memitem:ac8947941479c38403a09c14a60b03f01"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#ac8947941479c38403a09c14a60b03f01">major</a></td></tr>
+<tr class="separator:ac8947941479c38403a09c14a60b03f01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac107658b266a53e0c53532cf04b79530"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#ac107658b266a53e0c53532cf04b79530">device_mode</a> = <a class="el" href="sber__driver_8c.html#ab9c800875296f23bd616d7d273ff16d7">DEFAULT_MODE</a></td></tr>
+<tr class="separator:ac107658b266a53e0c53532cf04b79530"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68bdc372d47bd556e1244380c96ee93a"><td class="memItemLeft" align="right" valign="top">static struct class *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#a68bdc372d47bd556e1244380c96ee93a">queue_class</a></td></tr>
+<tr class="separator:a68bdc372d47bd556e1244380c96ee93a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a216702953ae41f2e67acbf6e5da5b5ca"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structqueue__device.html">queue_device</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sber__driver_8c.html#a216702953ae41f2e67acbf6e5da5b5ca">default_queue</a></td></tr>
+<tr class="separator:a216702953ae41f2e67acbf6e5da5b5ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Макросы</h2>
+<a id="ab9c800875296f23bd616d7d273ff16d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9c800875296f23bd616d7d273ff16d7">&#9670;&nbsp;</a></span>DEFAULT_MODE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_MODE&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5f5a2c9450ebc584b4fe743c6b1a280b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f5a2c9450ebc584b4fe743c6b1a280b">&#9670;&nbsp;</a></span>DEVICE_NAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEVICE_NAME&#160;&#160;&#160;&quot;sber_dev&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6e3549499a2441e9f2b1a83fdd935dc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e3549499a2441e9f2b1a83fdd935dc4">&#9670;&nbsp;</a></span>MULTI_OPEN_MODE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MULTI_OPEN_MODE&#160;&#160;&#160;2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a142810068f1b99cd93d3fc9f0e160e02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a142810068f1b99cd93d3fc9f0e160e02">&#9670;&nbsp;</a></span>QUEUE_SIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define QUEUE_SIZE&#160;&#160;&#160;1000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afaf48714636ba1a4364aa256eb8dacb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afaf48714636ba1a4364aa256eb8dacb1">&#9670;&nbsp;</a></span>SINGLE_OPEN_MODE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SINGLE_OPEN_MODE&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Функции</h2>
+<a id="ab8952af643c2b2ed549f097f3b915e71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8952af643c2b2ed549f097f3b915e71">&#9670;&nbsp;</a></span>DEFINE_MUTEX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static DEFINE_MUTEX </td>
+          <td>(</td>
+          <td class="paramtype">single_open_lock&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7469c0e02a3b12a90b9505401fbac6a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7469c0e02a3b12a90b9505401fbac6a1">&#9670;&nbsp;</a></span>device_ioctl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static long device_ioctl </td>
+          <td>(</td>
+          <td class="paramtype">struct file *&#160;</td>
+          <td class="paramname"><em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>cmd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned long&#160;</td>
+          <td class="paramname"><em>arg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Устанавливает режим работы устройства. </p>
+<dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>Указатель на структуру файла, ассоциированную с устройством. </td></tr>
+    <tr><td class="paramname">cmd</td><td>Команда, задающая режим работы (0 - общий, 1 - одиночный, 2 - параллельный). </td></tr>
+    <tr><td class="paramname">arg</td><td>Дополнительный аргумент (игнорируется).</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Устанавливает режим работы <code>device_mode</code>, который определяет поведение устройства при открытии и доступе: общий доступ, одиночный или параллельный.</p>
+<dl class="section return"><dt>Возвращает</dt><dd>0 при успешной установке режима или -EINVAL в случае неправильной команды. </dd></dl>
+
+</div>
+</div>
+<a id="ae551618a4770b820ca8e41cc4b1cfa48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae551618a4770b820ca8e41cc4b1cfa48">&#9670;&nbsp;</a></span>device_open()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int device_open </td>
+          <td>(</td>
+          <td class="paramtype">struct inode *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct file *&#160;</td>
+          <td class="paramname"><em>file</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Открывает устройство и инициализирует данные для очереди. </p>
+<dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inode</td><td>Указатель на структуру inode. </td></tr>
+    <tr><td class="paramname">file</td><td>Указатель на структуру файла, ассоциированную с устройством.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>В зависимости от установленного режима <code>device_mode</code>, драйвер поддерживает:</p><ol type="1">
+<li>Одиночный доступ (SINGLE_OPEN_MODE) с блокировкой параллельных открытий.</li>
+<li>Параллельный доступ (MULTI_OPEN_MODE), создавая отдельную очередь для каждого вызова.</li>
+<li>Общий режим (DEFAULT_MODE), где все процессы используют одну очередь.</li>
+</ol>
+<dl class="section return"><dt>Возвращает</dt><dd>0 при успешном открытии устройства или -EBUSY, если устройство занято. </dd></dl>
+
+</div>
+</div>
+<a id="a3b52b4f0dded88ffc383eb706cabd858"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b52b4f0dded88ffc383eb706cabd858">&#9670;&nbsp;</a></span>device_read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static ssize_t device_read </td>
+          <td>(</td>
+          <td class="paramtype">struct file *&#160;</td>
+          <td class="paramname"><em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char __user *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">loff_t *&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Читает данные из очереди устройства. </p>
+<dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>Указатель на структуру файла, ассоциированную с устройством. </td></tr>
+    <tr><td class="paramname">buf</td><td>Указатель на буфер пользователя для чтения. </td></tr>
+    <tr><td class="paramname">count</td><td>Количество байт для чтения. </td></tr>
+    <tr><td class="paramname">offset</td><td>Смещение, игнорируется в этом драйвере.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Извлекает данные из очереди устройства и копирует их в буфер пользователя, удаляя прочитанные элементы из очереди. Если данных недостаточно, возвращает количество прочитанных байт. <code>copy_to_user</code> используется для безопасной передачи данных.</p>
+<dl class="section return"><dt>Возвращает</dt><dd>Количество прочитанных байт или ошибку в случае неудачи. </dd></dl>
+
+</div>
+</div>
+<a id="a840f5f5a1916e668ef83d6acd94f06eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a840f5f5a1916e668ef83d6acd94f06eb">&#9670;&nbsp;</a></span>device_release()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int device_release </td>
+          <td>(</td>
+          <td class="paramtype">struct inode *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct file *&#160;</td>
+          <td class="paramname"><em>file</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Освобождает ресурсы при закрытии устройства. </p>
+<dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inode</td><td>Указатель на структуру inode. </td></tr>
+    <tr><td class="paramname">file</td><td>Указатель на структуру файла, ассоциированную с устройством.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Освобождает все элементы очереди, принадлежащие процессу, а также снимает блокировку в режиме одиночного доступа. Если используется параллельный режим, освобождает очередь, выделенную для конкретного процесса.</p>
+<dl class="section return"><dt>Возвращает</dt><dd>0 при успешном освобождении устройства. </dd></dl>
+
+</div>
+</div>
+<a id="a7bf4c715874774940b0daf0e04edb06c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bf4c715874774940b0daf0e04edb06c">&#9670;&nbsp;</a></span>device_write()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static ssize_t device_write </td>
+          <td>(</td>
+          <td class="paramtype">struct file *&#160;</td>
+          <td class="paramname"><em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char __user *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">loff_t *&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Записывает данные в очередь устройства. </p>
+<dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>Указатель на структуру файла, ассоциированную с устройством. </td></tr>
+    <tr><td class="paramname">buf</td><td>Указатель на буфер пользователя для записи. </td></tr>
+    <tr><td class="paramname">count</td><td>Количество байт для записи. </td></tr>
+    <tr><td class="paramname">offset</td><td>Смещение, игнорируется в этом драйвере.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Копирует данные из пользовательского буфера в очередь устройства. Если данные не помещаются в очередь (ограничение QUEUE_SIZE), возвращает ошибку переполнения. Использует <code>copy_from_user</code> для безопасного доступа к памяти пользователя.</p>
+<dl class="section return"><dt>Возвращает</dt><dd>Количество записанных байт или -ENOSPC в случае переполнения. </dd></dl>
+
+</div>
+</div>
+<a id="a6b31c4397995dbc5177041e18c602c85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b31c4397995dbc5177041e18c602c85">&#9670;&nbsp;</a></span>MODULE_AUTHOR()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MODULE_AUTHOR </td>
+          <td>(</td>
+          <td class="paramtype">&quot;Oleg Shipulin&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aafdb6f1c89c44dd2a834feabb7a7a415"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafdb6f1c89c44dd2a834feabb7a7a415">&#9670;&nbsp;</a></span>MODULE_DESCRIPTION()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MODULE_DESCRIPTION </td>
+          <td>(</td>
+          <td class="paramtype">&quot;Queue-based Character Device Driver for Linux 6.x&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af36044150beaeae89a1292423c2c9c02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af36044150beaeae89a1292423c2c9c02">&#9670;&nbsp;</a></span>module_exit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">module_exit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="sber__driver_8c.html#accd366d0e2f138d4ec509b7f0f503e0b">queue_exit</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab306bba83f4bbc42ccf5c636967e0196"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab306bba83f4bbc42ccf5c636967e0196">&#9670;&nbsp;</a></span>module_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">module_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="sber__driver_8c.html#a4792b867d187659a1d56479af45e22b3">queue_init</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad94b36675e7eb067ea3ce6ff9e244a44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad94b36675e7eb067ea3ce6ff9e244a44">&#9670;&nbsp;</a></span>MODULE_LICENSE()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MODULE_LICENSE </td>
+          <td>(</td>
+          <td class="paramtype">&quot;GPL&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="accd366d0e2f138d4ec509b7f0f503e0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accd366d0e2f138d4ec509b7f0f503e0b">&#9670;&nbsp;</a></span>queue_exit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void __exit queue_exit </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Освобождает ресурсы и снимает регистрацию устройства. </p>
+<p>Удаляет объект и класс устройства, снимает регистрацию драйвера и освобождает все ресурсы, занятые в процессе работы драйвера. </p>
+
+</div>
+</div>
+<a id="a4792b867d187659a1d56479af45e22b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4792b867d187659a1d56479af45e22b3">&#9670;&nbsp;</a></span>queue_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int __init queue_init </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Инициализирует устройство, регистрирует его в ядре. </p>
+<p>Регистрирует драйвер символического устройства с автоматическим назначением major-номера, создает класс и объект устройства, инициализирует общую очередь <code>default_queue</code> для работы в общем режиме.</p>
+<dl class="section return"><dt>Возвращает</dt><dd>0 при успешной регистрации устройства или код ошибки. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Переменные</h2>
+<a id="a216702953ae41f2e67acbf6e5da5b5ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a216702953ae41f2e67acbf6e5da5b5ca">&#9670;&nbsp;</a></span>default_queue</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structqueue__device.html">queue_device</a> default_queue</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac107658b266a53e0c53532cf04b79530"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac107658b266a53e0c53532cf04b79530">&#9670;&nbsp;</a></span>device_mode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int device_mode = <a class="el" href="sber__driver_8c.html#ab9c800875296f23bd616d7d273ff16d7">DEFAULT_MODE</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac8947941479c38403a09c14a60b03f01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8947941479c38403a09c14a60b03f01">&#9670;&nbsp;</a></span>major</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int major</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a68bdc372d47bd556e1244380c96ee93a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68bdc372d47bd556e1244380c96ee93a">&#9670;&nbsp;</a></span>queue_class</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct class* queue_class</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
