@@ -236,6 +236,15 @@ static long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
     return 0;
 }
 
+static const struct file_operations fops = {
+    .owner = THIS_MODULE,
+    .open = device_open,
+    .release = device_release,
+    .write = device_write,
+    .read = device_read,
+    .unlocked_ioctl = device_ioctl,
+};
+
 /**
  * @brief Инициализирует устройство, регистрирует его в ядре.
  *
@@ -252,7 +261,7 @@ static int __init queue_init(void) {
         return major;
     }
 
-    queue_class = class_create(THIS_MODULE, DEVICE_NAME);
+    queue_class = class_create(DEVICE_NAME);
     if (IS_ERR(queue_class)) {
         unregister_chrdev(major, DEVICE_NAME);
         pr_err("sber_device: Failed to create class\n");
